@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dbCfg = require('./config/database')
 const routes = require('./routes')
+const cors = require('cors')
 
 const app = express()
 
@@ -10,6 +11,7 @@ mongoose.connect(dbCfg.uri, {
     useUnifiedTopology: true
 })
 
+app.use(cors())
 app.use(express.json())
 app.use(routes)
 

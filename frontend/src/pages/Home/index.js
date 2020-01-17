@@ -1,108 +1,37 @@
-import React from 'react'
-import { Container, Form, Main, Header } from './styles'
+import React, { useState, useEffect } from 'react'
+import { Container, Main } from './styles'
+import DevItem from '../../components/DevItem'
+import Form from '../../components/DevForm'
+import api from '../../services/api'
 
 const Home = () => {
+    const [devs, setDevs] = useState([])
+
+    useEffect(() => {
+        async function loadDevs() {
+            const response = await api.get('/devs')
+            setDevs(response.data.devs)
+        }
+        loadDevs()
+    }, [])
+
+    async function handleAddDev(data) {
+        const response = await api.post('/devs', data)
+
+        setDevs([...devs, response.data])
+    }
+
     return (
         <Container>
             <aside>
                 <strong>Cadastrar</strong>
-                <Form>
-                    <div className='input-block'>
-                        <label htmlFor='github_username'>
-                            Usuário do Github
-                        </label>
-                        <input
-                            name='github_username'
-                            id='github_username'
-                            required
-                        />
-                    </div>
-                    <div className='input-block'>
-                        <label htmlFor='techs'>Tecnologias</label>
-                        <input name='techs' id='techs' required />
-                    </div>
-
-                    <div className='input-group'>
-                        <div className='input-block'>
-                            <label htmlFor='latitude'>Latitude</label>
-                            <input name='latitude' id='latitude' required />
-                        </div>
-
-                        <div className='input-block'>
-                            <label htmlFor='longitude'>Longitude</label>
-                            <input name='longitude' id='longitude' required />
-                        </div>
-                    </div>
-
-                    <button type='submit'>Cadastrar</button>
-                </Form>
+                <Form onSubmit={handleAddDev}></Form>
             </aside>
             <Main>
                 <ul>
-                    <li>
-                        <Header>
-                            <img
-                                src='https://avatars0.githubusercontent.com/u/26206406?s=460&v=4'
-                                alt='avatar'
-                            />
-                            <div>
-                                <strong>Yago Theodoro</strong>
-                                <span>ReactJS, NodeJS, React Native</span>
-                            </div>
-                        </Header>
-                        <p>Fullstack Developer & InfoSec Enthusiast</p>
-                        <a href='https://github.com/freonzx'>
-                            Acessar perfil no Github
-                        </a>
-                    </li>
-                    <li>
-                        <Header>
-                            <img
-                                src='https://avatars0.githubusercontent.com/u/26206406?s=460&v=4'
-                                alt='avatar'
-                            />
-                            <div>
-                                <strong>Yago Theodoro</strong>
-                                <span>ReactJS, NodeJS, React Native</span>
-                            </div>
-                        </Header>
-                        <p>Fullstack Developer & InfoSec Enthusiast</p>
-                        <a href='https://github.com/freonzx'>
-                            Acessar perfil no Github
-                        </a>
-                    </li>
-                    <li>
-                        <Header>
-                            <img
-                                src='https://avatars0.githubusercontent.com/u/26206406?s=460&v=4'
-                                alt='avatar'
-                            />
-                            <div>
-                                <strong>Yago Theodoro</strong>
-                                <span>ReactJS, NodeJS, React Native</span>
-                            </div>
-                        </Header>
-                        <p>Fullstack Developer & InfoSec Enthusiast</p>
-                        <a href='https://github.com/freonzx'>
-                            Acessar perfil no Github
-                        </a>
-                    </li>
-                    <li>
-                        <Header>
-                            <img
-                                src='https://avatars0.githubusercontent.com/u/26206406?s=460&v=4'
-                                alt='avatar'
-                            />
-                            <div>
-                                <strong>Yago Theodoro</strong>
-                                <span>ReactJS, NodeJS, React Native</span>
-                            </div>
-                        </Header>
-                        <p>Fullstack Developer & InfoSec Enthusiast</p>
-                        <a href='https://github.com/freonzx'>
-                            Acessar perfil no Github
-                        </a>
-                    </li>
+                    {devs.map(dev => (
+                        <DevItem key={dev._id} dev={dev}></DevItem>
+                    ))}
                 </ul>
             </Main>
         </Container>
